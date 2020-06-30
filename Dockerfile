@@ -1,4 +1,4 @@
-FROM node:12.16-buster
+FROM node:14.4-buster
 
 WORKDIR /app
 
@@ -7,8 +7,8 @@ COPY ./package-lock.json .
 
 RUN npm install
 
-COPY ./bin ./bin
 COPY ./public ./public
+COPY ./server ./server
 COPY ./src ./src
 
-CMD ./bin/start
+CMD npm run serve

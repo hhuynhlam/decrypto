@@ -1,0 +1,13 @@
+build:
+  config:
+    NODE_ENV: production
+    RELEASE_ENV: production
+  docker:
+    web: Dockerfile
+
+run:
+  web:
+    image: web
+    command:
+      - npm run serve
+

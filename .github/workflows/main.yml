@@ -1,4 +1,4 @@
-name: Backend
+name: Build
 
 on:
   push:
@@ -14,20 +14,19 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v1
+    - name: Set up Node.js
+      uses: actions/setup-node@v1
       with:
-        python-version: 3.6
+        node-version: '12.16.x'
 
     - name: Install Dependencies
       run: |
-        pip install pipenv
-        PIPENV_VENV_IN_PROJECT=true pipenv install --dev
+        npm install
 
     - name: Lint
       run: |
-        pipenv run pylint ./server
+        npm run lint
 
     - name: Test
       run: |
-        pipenv run pytest ./server
+        npm test
