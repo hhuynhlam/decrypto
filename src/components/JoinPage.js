@@ -1,31 +1,28 @@
 import React from 'react'
-import { Button } from 'antd'
+import { Button, Form, Input } from 'antd';
+import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
+import useQueryParams from '../hooks/useQueryParams'
 import { Centered } from './Layout'
+import RoomForm from './RoomForm'
 
-function LandingPage() {
+function JoinPage() {
+  const { roomId } = useParams()
+  const params = useQueryParams()
+  const password = params.get('password')
+
   return (
-    <LandingPage.Wrapper>
-      <Centered direction="column">
-        <LandingPage.Button type="primary" shape="round">
-          Create a Game
-        </LandingPage.Button>
-
-        <LandingPage.Button shape="round">
-          Join a Game
-        </LandingPage.Button>
+    <JoinPage.Wrapper>
+      <Centered>
+        <RoomForm roomId={roomId} password={password} />
       </Centered>
-    </LandingPage.Wrapper>
+    </JoinPage.Wrapper>
   )
 }
 
-LandingPage.Button = styled(Button)`
-  min-width: 250px;
-  margin: 10px 0;
-`
-LandingPage.Wrapper = styled.section`
+JoinPage.Wrapper = styled.section`
   height: 100vh;
   width: 100vw;
 `
 
-export default LandingPage
+export default JoinPage
