@@ -24,7 +24,8 @@
     "build": "react-scripts build",
     "eject": "react-scripts eject",
     "lint": "eslint ./server ./src",
-    "serve": "./bin/serve",
+    "serve": "npm run build && node server",
+    "server": "node server",
     "start": "react-scripts start",
     "test": "react-scripts test"
   },
