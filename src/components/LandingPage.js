@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from 'antd'
+import { Link } from "react-router-dom"
 import styled from 'styled-components'
 import { Centered } from './Layout'
 
@@ -8,11 +9,11 @@ function LandingPage() {
     <LandingPage.Wrapper>
       <Centered direction="column">
         <LandingPage.Button type="primary" shape="round" size="large">
-          Create a Game
+          <Link to="/create">Create a Game</Link>
         </LandingPage.Button>
 
         <LandingPage.Button shape="round" size="large">
-          Join a Game
+          <Link to="/join">Join a Game</Link>
         </LandingPage.Button>
       </Centered>
     </LandingPage.Wrapper>

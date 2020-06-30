@@ -4,6 +4,7 @@ import CreatePage from './CreatePage'
 import JoinPage from './JoinPage'
 import LandingPage from './LandingPage'
 import NotFound from './NotFound'
+import TeamsPage from './TeamsPage'
 
 function App() {
   return (
@@ -17,6 +18,9 @@ function App() {
         </Route>
         <Route path="/join/:roomId?">
           <JoinPage />
+        </Route>
+        <Route path="/teams/:roomId">
+          <TeamsPage />
         </Route>
         <Route path="*">
           <NotFound />
