@@ -1,0 +1,11 @@
+[MASTER]
+load-plugins = pylint_django
+
+[FORMAT]
+max-line-length = 120
+
+[MESSAGES CONTROL]
+disable = abstract-method,missing-docstring,no-self-use,relative-beyond-top-level,unused-argument
+
+[MISCELLANEOUS]
+notes=FIXME

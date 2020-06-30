@@ -1,0 +1,17 @@
+.DS_Store
+.db
+.env.local
+.pytest_cache/
+.venv
+/build
+/coverage
+/node_modules
+__pycache__/
+__pypackages__/
+db.sqlite3
+dist/
+npm-debug.log*
+server/data/
+venv.bak/
+yarn-debug.log*
+yarn-error.log*

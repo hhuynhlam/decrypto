@@ -1,0 +1,42 @@
+{
+  "name": "buoy",
+  "version": "0.1.0",
+  "private": true,
+  "author": "Hai Huynhlam <hhuynhlam@gmail.com>",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": "^12.16.0"
+  },
+  "engineStrict": true,
+  "devDependencies": {
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "serve": "^11.3.0"
+  },
+  "scripts": {
+    "build": "react-scripts build",
+    "eject": "react-scripts eject",
+    "lint": "eslint ./src",
+    "serve": "serve -s build",
+    "start": "react-scripts start",
+    "test": "react-scripts test"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
