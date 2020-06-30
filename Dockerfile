@@ -9,6 +9,7 @@ RUN npm install
 
 COPY ./bin ./bin
 COPY ./public ./public
+COPY ./server ./server
 COPY ./src ./src
 
-CMD ./bin/start
+CMD ./bin/serve
