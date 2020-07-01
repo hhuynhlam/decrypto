@@ -3,7 +3,7 @@ const { v1: uuidv1 } = require('uuid')
 const redis = require('./redis')
 const utils = require('./utils')
 
-const EXPIRE = 3600 // seconds in 1 hour
+const EXPIRE = 7200 // seconds in 1 hour
 
 
 /**
@@ -61,6 +61,37 @@ function onChangeTeam(socket, io) {
   }
 }
 
+function onStartGame(socket, io) {
+  return async (payload) => {
+    const data = JSON.parse(payload)
+    const gameKey = utils.getGameKey(data.roomId)
+
+    const gameData = {
+      interceptions: {
+        foxtrot: 0,
+        tango: 0,
+      },
+      mistakes: {
+        foxtrot: 0,
+        tango: 0,
+      },
+      rounds: [],
+      words: {
+        foxtrot: utils.generateWords(),
+        tango: utils.generateWords(),
+      },
+    }
+
+    const game = await redis.set(gameKey, JSON.stringify(gameData))
+    await redis.expire(gameKey, EXPIRE)
+
+    await io.in(data.channel).emit('started-game', `started by: ${data.name}`)
+    await io.in(data.channel).emit('update-game', JSON.stringify(gameData))
+
+    await socket.join(`${data.channel}_${data.team}`)
+  }
+}
+
 function onJoinRoom(socket, io) {
   return async (payload) => {
     const data = JSON.parse(payload)
@@ -74,11 +105,6 @@ function onJoinRoom(socket, io) {
     await redis.expire(tangoKey, EXPIRE)
 
     await utils.listTeams(data.channel, data.roomId, io)
-  }
-}
-
-function onStartGame(socket, io) {
-  return async () => {
   }
 }
 

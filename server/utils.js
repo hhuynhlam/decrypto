@@ -31,6 +31,10 @@ function generateWords() {
   return words
 }
 
+function getGameKey(roomId) {
+  return `game_${roomId}`
+}
+
 function getRoomKey(roomId) {
   return `room_${roomId}`
 }
@@ -52,6 +56,7 @@ async function listTeams(channel, roomId, io) {
 module.exports = {
   generateCode,
   generateWords,
+  getGameKey,
   getRoomKey,
   getTeamKey,
   listTeams,

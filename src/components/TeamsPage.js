@@ -1,20 +1,34 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Button, Card, Col, Layout, Row, Tooltip } from 'antd';
 import { write } from 'clipboardy'
-import { useParams } from 'react-router-dom'
+import cookies from 'js-cookie'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import SocketContext from '../contexts/SocketContext'
 import useQueryParams from '../hooks/useQueryParams'
-import { Centered } from './Layout'
 
 function TeamsPage() {
   const socket = useContext(SocketContext)
+  const history = useHistory()
   const { roomId } = useParams()
   const params = useQueryParams()
   const password = params.get('password')
   const [foxtrot, setFoxtrot] = useState([])
   const [tango, setTango] = useState([])
   const [isCopiedVisible, setIsCopiedVisible] = useState(false)
+
+  useEffect(() => {
+    socket.connection.on('started-game', (payload) => {
+      const name = cookies.get('decrypto_name')
+      const self = document.querySelector(`[data-name="${name}"]`)
+      const team = self.dataset.team
+
+      console.log(payload)
+      history.push(`/game/${roomId}?team=${team}`)
+    })
+
+    return () => socket.connection.off('started-game')
+  }, [socket.connection])
 
   useEffect(() => {
     socket.connection.on('update-teams', (payload) => {
@@ -48,7 +62,20 @@ function TeamsPage() {
   }
 
   function handleStart() {
-    socket.connection.emit('start-game', 'hello')
+    const name = cookies.get('decrypto_name')
+    const self = document.querySelector(`[data-name="${name}"]`)
+    const team = self.dataset.team
+
+    socket.team = team
+
+    socket.connection.emit('start-game', JSON.stringify({
+      channel: socket.globalChannel,
+      name,
+      roomId,
+      team,
+    }))
+
+    history.push(`/game/${roomId}?team=${team}`)
   }
 
   return (

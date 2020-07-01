@@ -5,7 +5,7 @@ class Socket {
   constructor() {
     this.connection = io.connect(process.env.REACT_APP_PROXY)
     this.globalChannel = null
-    this.teamChannel = null
+    this.team = null
   }
 }
 
