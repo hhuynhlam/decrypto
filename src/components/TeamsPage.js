@@ -47,6 +47,10 @@ function TeamsPage() {
     }))
   }
 
+  function handleStart() {
+    socket.connection.emit('start-game', 'hello')
+  }
+
   return (
     <>
       <TeamsPage.Header>
@@ -108,7 +112,9 @@ function TeamsPage() {
         <Tooltip placement="top" title="Copied!" visible={isCopiedVisible}>
           <a onClick={handleCopyLink}>Invite Link</a>
         </Tooltip>
-        <Button type="primary" shape="round" size="large">Start</Button>
+        <Button type="primary" shape="round" size="large" onClick={handleStart}>
+          Start
+        </Button>
       </TeamsPage.Footer>
     </>
   )

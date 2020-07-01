@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, Form, Input } from 'antd';
+import cookies from 'js-cookie'
 import styled from 'styled-components'
 
 function RoomForm({
@@ -18,6 +19,7 @@ function RoomForm({
   }
 
   const initialValues = {
+    name: cookies.get('decrypto_name'),
     password: password,
     roomId: roomId,
   }

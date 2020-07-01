@@ -43,22 +43,6 @@ async function joinRoom(req, res) {
 /**
  * Socket.IO
  */
-function onJoinRoom(socket, io) {
-  return async (payload) => {
-    const data = JSON.parse(payload)
-
-    const tangoKey = utils.getTeamKey(data.roomId, 'tango')
-
-    await socket.join(data.channel)
-
-    await redis.lrem(tangoKey, 0, data.name)
-    await redis.rpush(tangoKey, data.name)
-    await redis.expire(tangoKey, EXPIRE)
-
-    await utils.listTeams(data.channel, data.roomId, io)
-  }
-}
-
 function onChangeTeam(socket, io) {
   return async (payload) => {
     const data = JSON.parse(payload)
@@ -77,10 +61,32 @@ function onChangeTeam(socket, io) {
   }
 }
 
+function onJoinRoom(socket, io) {
+  return async (payload) => {
+    const data = JSON.parse(payload)
+
+    const tangoKey = utils.getTeamKey(data.roomId, 'tango')
+
+    await socket.join(data.channel)
+
+    await redis.lrem(tangoKey, 0, data.name)
+    await redis.rpush(tangoKey, data.name)
+    await redis.expire(tangoKey, EXPIRE)
+
+    await utils.listTeams(data.channel, data.roomId, io)
+  }
+}
+
+function onStartGame(socket, io) {
+  return async () => {
+  }
+}
+
 module.exports = {
   createRoom,
   joinRoom,
 
   onChangeTeam,
   onJoinRoom,
+  onStartGame,
 }

@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import cookies from 'js-cookie'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import SocketContext from '../contexts/SocketContext'
@@ -10,6 +11,8 @@ function CreatePage() {
   const history = useHistory()
 
   async function handleSubmit({ name, password }) {
+    cookies.set('decrypto_name', name)
+
     const response = await fetch(`${process.env.REACT_APP_PROXY}/api/rooms`, {
       method: 'POST',
       headers: {

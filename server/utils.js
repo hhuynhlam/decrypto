@@ -1,4 +1,35 @@
+const fs = require('fs')
+const path = require('path')
+const yaml = require('js-yaml')
 const redis = require('./redis')
+
+function generateCode(code = new Set()) {
+  const digit = Math.floor((Math.random() * 4)) + 1;
+
+  code.add(digit)
+
+  if (code.size === 3) {
+    return code
+  }
+
+  return generateCode(code)
+}
+
+function generateWords() {
+  const yml = path.join(__dirname, 'words.yml')
+  const possible = yaml.safeLoad(fs.readFileSync(yml, 'utf8'))
+
+  const words = []
+
+  for (let i = 0; i < 4; i++) {
+    const random = Math.floor(Math.random() * possible.length)
+    const chosen = possible.splice(random, 1)[0]
+
+    words.push(chosen)
+  }
+
+  return words
+}
 
 function getRoomKey(roomId) {
   return `room_${roomId}`
@@ -19,6 +50,8 @@ async function listTeams(channel, roomId, io) {
 }
 
 module.exports = {
+  generateCode,
+  generateWords,
   getRoomKey,
   getTeamKey,
   listTeams,

@@ -1,5 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Alert } from 'antd'
+import cookies from 'js-cookie'
 import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import SocketContext from '../contexts/SocketContext'
@@ -16,6 +17,8 @@ function JoinPage() {
   const password = params.get('password') || ''
 
   async function handleSubmit({ roomId, name, password }) {
+    cookies.set('decrypto_name', name)
+
     const response = await fetch(`${process.env.REACT_APP_PROXY}/api/rooms/${roomId}`, {
       method: 'PUT',
       headers: {
