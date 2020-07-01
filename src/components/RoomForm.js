@@ -26,7 +26,6 @@ function RoomForm({
     <Form
       {...formItemLayout}
       initialValues={initialValues}
-      labelAlign="left"
       onFinish={onSubmit}
    >
       {
