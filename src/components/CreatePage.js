@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 import SocketContext from '../contexts/SocketContext'
 import { Centered } from './Layout'
@@ -6,6 +7,7 @@ import RoomForm from './RoomForm'
 
 function CreatePage() {
   const socket = useContext(SocketContext)
+  const history = useHistory()
 
   async function handleSubmit({ name, password }) {
     const response = await fetch(`${process.env.REACT_APP_PROXY}/api/rooms`, {
@@ -19,10 +21,14 @@ function CreatePage() {
 
     const room = await response.json()
 
-    socket.emit('join-room', JSON.stringify({
-      room: `${room.roomId}_${room.password || ''}`,
+    socket.connection.emit('join-room', JSON.stringify({
+      ...room,
       name,
     }))
+
+    socket.globalChannel = room.channel
+
+    history.push(`/teams/${room.roomId}`)
   }
 
   return (

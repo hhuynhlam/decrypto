@@ -6,5 +6,8 @@ const client = redis.createClient(config.REDIS_URL)
 
 module.exports = {
   get: promisify(client.get).bind(client),
+  lrange: promisify(client.lrange).bind(client),
+  lrem: promisify(client.lrem).bind(client),
+  rpush: promisify(client.rpush).bind(client),
   set: promisify(client.set).bind(client),
 }

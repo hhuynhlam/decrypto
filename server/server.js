@@ -37,9 +37,8 @@ app.get('*', (req, res) =>
  */
 
 io.on('connection', (socket) => {
-  socket.on('join-room', function(data) {
-    socket.join(data.room)
-  })
+  socket.on('change-team', controllers.onChangeTeam(socket, io))
+  socket.on('join-room', controllers.onJoinRoom(socket, io))
 })
 
 exports.app = app

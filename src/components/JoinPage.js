@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import { Alert } from 'antd'
-import { useParams } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import SocketContext from '../contexts/SocketContext'
 import useQueryParams from '../hooks/useQueryParams'
@@ -10,6 +10,7 @@ import RoomForm from './RoomForm'
 function JoinPage() {
   const [error, setError] = useState('')
   const socket = useContext(SocketContext)
+  const history = useHistory()
   const { roomId } = useParams()
   const params = useQueryParams()
   const password = params.get('password')
@@ -37,10 +38,14 @@ function JoinPage() {
 
     const room = await response.json()
 
-    socket.emit('join-room', JSON.stringify({
-      room: `${room.roomId}_${room.password || ''}`,
+    socket.connection.emit('join-room', JSON.stringify({
+      ...room,
       name,
     }))
+
+    socket.globalChannel = room.channel
+
+    history.push(`/teams/${room.roomId}`)
   }
 
   return (
