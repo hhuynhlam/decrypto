@@ -49,12 +49,25 @@ function TeamsPage() {
 
   return (
     <>
+      <TeamsPage.Header>
+        <div>
+          <strong>Room ID:&nbsp;</strong>
+          <span>{roomId}</span>
+        </div>
+
+        { password &&
+          <div>
+            <strong>Password:&nbsp;</strong>
+            <span>{password}</span>
+          </div>
+        }
+      </TeamsPage.Header>
+
       <TeamsPage.Wrapper>
         <TeamsPage.Row>
           <Col xs={24} md={12}>
             <TeamsPage.Team title="Tango">
-              {
-                tango.map(name => (
+              { tango.map(name => (
                   <TeamsPage.Player
                     data-name={name}
                     data-team="tango"
@@ -109,6 +122,15 @@ TeamsPage.Footer = styled(Layout.Footer)`
   display: flex;
   justify-content: space-between;
 `
+TeamsPage.Header = styled(Layout.Header)`
+  color: rgba(255, 255, 255, 1);
+  display: flex;
+  justify-content: space-between;
+
+  @media all and (max-width: 767.9px) {
+    display: none;
+  }
+`
 TeamsPage.Row = styled(Row)`
   height: 100%;
   overflow: hidden;
@@ -133,8 +155,12 @@ TeamsPage.Team = styled(Card)`
   }
 `
 TeamsPage.Wrapper = styled.section`
-  height: calc(100vh - 88px);
+  height: calc(100vh - 64px - 88px);
   width: 100vw;
+
+  @media all and (max-width: 767.9px) {
+    height: calc(100vh - 88px);
+  }
 `
 
 export default TeamsPage

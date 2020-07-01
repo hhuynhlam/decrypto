@@ -3,6 +3,9 @@ const { v1: uuidv1 } = require('uuid')
 const redis = require('./redis')
 const utils = require('./utils')
 
+const EXPIRE = 3600 // seconds in 1 hour
+
+
 /**
  * Express
  */
@@ -13,14 +16,10 @@ async function createRoom(req, res) {
     password: req.body.password,
     roomId: uuidv1(),
   }
-  const expire = 3600 // seconds in 1 hour
+  const roomKey = utils.getRoomKey(data.roomId)
 
-  const room = await redis.set(
-    utils.getRoomKey(data.roomId),
-    JSON.stringify(data),
-    'EX',
-    expire,
-  )
+  const room = await redis.set(roomKey, JSON.stringify(data))
+  await redis.expire(roomKey, EXPIRE)
 
   return res.status(201).json(data)
 }
@@ -51,7 +50,10 @@ function onJoinRoom(socket, io) {
     const tangoKey = utils.getTeamKey(data.roomId, 'tango')
 
     await socket.join(data.channel)
+
+    await redis.lrem(tangoKey, 0, data.name)
     await redis.rpush(tangoKey, data.name)
+    await redis.expire(tangoKey, EXPIRE)
 
     await utils.listTeams(data.channel, data.roomId, io)
   }
@@ -69,6 +71,7 @@ function onChangeTeam(socket, io) {
 
     await redis.lrem(currentTeamKey, 0, data.name)
     await redis.rpush(newTeamKey, data.name)
+    await redis.expire(newTeamKey, EXPIRE)
 
     await utils.listTeams(data.channel, data.roomId, io)
   }
