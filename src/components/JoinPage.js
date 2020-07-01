@@ -10,10 +10,14 @@ function JoinPage() {
   const params = useQueryParams()
   const password = params.get('password')
 
+  function handleSubmit({ name, password, roomId }) {
+    debugger
+  }
+
   return (
     <JoinPage.Wrapper>
       <Centered>
-        <RoomForm roomId={roomId} password={password} />
+        <RoomForm roomId={roomId} password={password} onSubmit={handleSubmit} />
       </Centered>
     </JoinPage.Wrapper>
   )

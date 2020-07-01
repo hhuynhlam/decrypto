@@ -6,6 +6,8 @@ function RoomForm({
   disableRoomId = false,
   password = '',
   roomId = '',
+
+  onSubmit = () => {},
 }) {
   const buttonLayout = {
     wrapperCol: { span: 24 },
@@ -21,7 +23,12 @@ function RoomForm({
   }
 
   return (
-    <Form {...formItemLayout} initialValues={initialValues} labelAlign="left">
+    <Form
+      {...formItemLayout}
+      initialValues={initialValues}
+      labelAlign="left"
+      onFinish={onSubmit}
+   >
       {
         !disableRoomId &&
           <RoomForm.FormItem

@@ -1,11 +1,9 @@
-const dotenv = require('dotenv')
-
 if (process.env.NODE_ENV !== 'production') {
-  dotenv.config()
+  require('dotenv').config()
 }
 
-const app = require('./app')
 const config = require('./config')
+const server = require('./server')
 
-app.listen(config.PORT, () =>
+server.listen(config.PORT, () =>
   console.log(`🚀 booted up and listening at http://localhost:${config.PORT}`))
