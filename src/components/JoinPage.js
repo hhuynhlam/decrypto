@@ -13,7 +13,7 @@ function JoinPage() {
   const history = useHistory()
   const { roomId } = useParams()
   const params = useQueryParams()
-  const password = params.get('password')
+  const password = params.get('password') || ''
 
   async function handleSubmit({ roomId, name, password }) {
     const response = await fetch(`${process.env.REACT_APP_PROXY}/api/rooms/${roomId}`, {
@@ -45,7 +45,7 @@ function JoinPage() {
 
     socket.globalChannel = room.channel
 
-    history.push(`/teams/${room.roomId}`)
+    history.push(`/teams/${room.roomId}?password=${password}`)
   }
 
   return (

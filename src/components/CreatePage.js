@@ -28,7 +28,7 @@ function CreatePage() {
 
     socket.globalChannel = room.channel
 
-    history.push(`/teams/${room.roomId}`)
+    history.push(`/teams/${room.roomId}?password=${password}`)
   }
 
   return (

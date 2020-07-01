@@ -1,15 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { Button, Card, Col, Layout, Row } from 'antd';
+import { Button, Card, Col, Layout, Row, Tooltip } from 'antd';
+import { write } from 'clipboardy'
 import { useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import SocketContext from '../contexts/SocketContext'
+import useQueryParams from '../hooks/useQueryParams'
 import { Centered } from './Layout'
 
 function TeamsPage() {
   const socket = useContext(SocketContext)
   const { roomId } = useParams()
+  const params = useQueryParams()
+  const password = params.get('password')
   const [foxtrot, setFoxtrot] = useState([])
   const [tango, setTango] = useState([])
+  const [isCopiedVisible, setIsCopiedVisible] = useState(false)
 
   useEffect(() => {
     socket.connection.on('update-teams', (payload) => {
@@ -21,6 +26,15 @@ function TeamsPage() {
 
     return () => socket.connection.off('update-teams')
   }, [socket.connection])
+
+  async function handleCopyLink(event) {
+    const query = password ? `?password=${password}` : ''
+
+    await write(`${window.location.origin}/join/${roomId}${query}`)
+
+    setIsCopiedVisible(true)
+    setTimeout(() => setIsCopiedVisible(false), 3000)
+  }
 
   function handlePlayerToggle(event) {
     const { name, team } = event.currentTarget.dataset
@@ -78,6 +92,9 @@ function TeamsPage() {
       </TeamsPage.Wrapper>
 
       <TeamsPage.Footer>
+        <Tooltip placement="top" title="Copied!" visible={isCopiedVisible}>
+          <a onClick={handleCopyLink}>Invite Link</a>
+        </Tooltip>
         <Button type="primary" shape="round" size="large">Start</Button>
       </TeamsPage.Footer>
     </>
@@ -90,7 +107,7 @@ TeamsPage.Player = styled(Button)`
 TeamsPage.Footer = styled(Layout.Footer)`
   align-items: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
 `
 TeamsPage.Row = styled(Row)`
   height: 100%;
