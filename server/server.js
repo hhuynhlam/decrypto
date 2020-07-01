@@ -2,6 +2,7 @@ const http = require('http')
 const path = require('path')
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
+const cors = require('cors')
 const express = require('express')
 const socketio = require('socket.io')
 const config = require('./config')
@@ -19,6 +20,10 @@ app.use(bodyParser.json())
 app.use(cookieParser())
 app.use(middlewares.io(io))
 
+if (config.NODE_ENV !== 'production') {
+  app.use(cors())
+}
+
 app.use(express.static(path.join(__dirname, '../build')))
 
 app.post('/api/rooms', controllers.createRoom)
@@ -32,12 +37,8 @@ app.get('*', (req, res) =>
  */
 
 io.on('connection', (socket) => {
-  socket.on('create-room', function({ name, password }) {
-    console.log('create-room', name, password)
-  })
-
-  socket.on('join-room', function({ id, name, password }) {
-    console.log('join-room', id, name, password)
+  socket.on('join-room', function(data) {
+    socket.join(data.room)
   })
 })
 

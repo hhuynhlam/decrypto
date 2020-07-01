@@ -42,7 +42,6 @@ function RoomForm({
       <RoomForm.FormItem
         label="Password"
         name="password"
-        rules={[{ required: true, message: 'Password is required.' }]}
       >
         <Input size="large" />
       </RoomForm.FormItem>
