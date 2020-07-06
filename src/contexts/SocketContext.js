@@ -3,7 +3,7 @@ import io from 'socket.io-client'
 
 class Socket {
   constructor() {
-    this.connection = io.connect(process.env.REACT_APP_PROXY)
+    this.connection = io.connect(process.env.REACT_APP_PROXY || '')
     this.globalChannel = null
     this.team = null
   }

@@ -7,7 +7,7 @@ function SecretCode() {
   const [code, setCode] = useState('None')
 
   async function handleNew() {
-    const response = await fetch(`${process.env.REACT_APP_PROXY}/api/code`)
+    const response = await fetch(`${process.env.REACT_APP_PROXY || ''}/api/code`)
     const data = await response.json()
 
     setCode(data.code)

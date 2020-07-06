@@ -13,7 +13,7 @@ function CreatePage() {
   async function handleSubmit({ name, password }) {
     cookies.set('decrypto_name', name)
 
-    const response = await fetch(`${process.env.REACT_APP_PROXY}/api/rooms`, {
+    const response = await fetch(`${process.env.REACT_APP_PROXY || ''}/api/rooms`, {
       method: 'POST',
       headers: {
         'accept': 'application/json',
