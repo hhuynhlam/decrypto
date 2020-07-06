@@ -23,12 +23,11 @@ function TeamsPage() {
       const self = document.querySelector(`[data-name="${name}"]`)
       const team = self.dataset.team
 
-      console.log(payload)
       history.push(`/game/${roomId}?team=${team}`)
     })
 
     return () => socket.connection.off('started-game')
-  }, [socket.connection])
+  }, [history, roomId, socket.connection])
 
   useEffect(() => {
     socket.connection.on('update-teams', (payload) => {
@@ -137,7 +136,7 @@ function TeamsPage() {
 
       <TeamsPage.Footer>
         <Tooltip placement="top" title="Copied!" visible={isCopiedVisible}>
-          <a onClick={handleCopyLink}>Invite Link</a>
+          <Button type="link" onClick={handleCopyLink}>Invite Link</Button>
         </Tooltip>
         <Button type="primary" shape="round" size="large" onClick={handleStart}>
           Start
