@@ -160,38 +160,41 @@ function Rounds({
   const clueCols = [
     {
       dataIndex: 'clue',
-      title: 'Clue',
       render: (text, record, index) => (
         <Input
           data-index={index}
           data-key='clue'
           defaultValue={text}
           onKeyPress={handleChange}
+          placeholder="Clue"
+          size="small"
         />
       ),
     },
     {
       dataIndex: 'guess',
-      title: '?',
       render: (text, record, index) => (
         <Input
           data-index={index}
           data-key='guess'
           defaultValue={text}
           onKeyPress={handleChange}
+          placeholder="?"
+          size="small"
         />
       ),
       width: 75,
     },
     {
       dataIndex: 'actual',
-      title: '✓',
       render: (text, record, index) => (
         <Input
           data-index={index}
           data-key='actual'
           defaultValue={text}
           onKeyPress={handleChange}
+          placeholder="✓"
+          size="small"
         />
       ),
       width: 75,
@@ -212,6 +215,8 @@ function Rounds({
                 dataSource={record.clues}
                 pagination={false}
                 rowKey={() => uuidv1()}
+                showHeader={false}
+                size="small"
               />
            </>
           ),

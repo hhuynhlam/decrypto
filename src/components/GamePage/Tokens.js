@@ -78,6 +78,16 @@ Tokens.Wrapper = styled.div`
   button:first-child {
     margin-right: 1rem;
   }
+
+  @media all and (max-width: 767.9px) {
+    button {
+      margin-bottom: 1rem;
+    }
+
+    span[role="img"] {
+      display: none;
+    }
+  }
 `
 
 export default Tokens

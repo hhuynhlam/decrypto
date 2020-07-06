@@ -59,19 +59,21 @@ function GamePage() {
         <Col xs={24} md={16}>
           <GamePage.Meta size="small">
             <SecretCode />
-            <Tokens
-              remoteInterceptions={interceptions['foxtrot']}
-              remoteMistakes={mistakes['foxtrot']}
-              team="foxtrot"
-            />
-            <Tokens
-              remoteInterceptions={interceptions['tango']}
-              remoteMistakes={mistakes['tango']}
-              team="tango"
-            />
+            <div>
+              <Tokens
+                remoteInterceptions={interceptions['foxtrot']}
+                remoteMistakes={mistakes['foxtrot']}
+                team="foxtrot"
+              />
+              <Tokens
+                remoteInterceptions={interceptions['tango']}
+                remoteMistakes={mistakes['tango']}
+                team="tango"
+              />
+            </div>
           </GamePage.Meta >
 
-          <Card size="small">
+          <Card className="game-page-tabs" size="small">
             <Tabs defaultActiveKey="rounds">
               <Tabs.TabPane tab="Rounds" key="rounds">
                 <Rounds remoteRounds={rounds} players={players} />
@@ -96,14 +98,43 @@ GamePage.Meta = styled(Card)`
     display: flex;
     justify-content: space-between;
 
-    > div {
-      width: 50%;
+    > div:first-child {
+      width: 20%;
+    }
+
+    > div:not(:first-child) {
+      display: flex;
+      justify-content: flex-end;
+      width: 80%;
+    }
+
+    > div:not(:first-child) > div:first-child {
+      margin-right: 1rem;
+    }
+
+    @media all and (max-width: 767.9px) {
+      > div:not(:first-child) {
+        display: block;
+      }
+
+      > div:not(:first-child) > div:first-child {
+        margin-right: 0;
+      }
+
+      > div {
+        width: 50%;
+      }
     }
   }
 `
 GamePage.Wrapper = styled(Row)`
-  height: calc(100vh - 129px);
+  height: calc(100vh - 86px);
   width: 100%;
+
+  .game-page-tabs > .ant-card-body {
+    height: calc(100vh - 86px - 66px);
+    overflow-y: scroll;
+  }
 `
 
 export default GamePage

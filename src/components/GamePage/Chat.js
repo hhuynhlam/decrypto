@@ -65,7 +65,7 @@ Chat.Wrapper = styled(Card)`
   .ant-card-body {
     display: flex;
     flex-direction: column-reverse;
-    height: calc(687px - 58px - 78px);
+    height: calc(100vh - 86px - 40px - 78px);
     overflow-y: scroll;
   }
 `
