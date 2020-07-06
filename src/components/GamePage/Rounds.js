@@ -69,15 +69,7 @@ function Rounds({
     if (!isEqual(localRounds)(remoteRounds)) {
       setLocalRounds(remoteRounds)
     }
-  }, [remoteRounds])
-
-  useEffect(() => {
-    socket.connection.emit('change-rounds', JSON.stringify({
-      channel: socket.globalChannel,
-      roomId,
-      rounds: localRounds,
-    }))
-  }, [localRounds, roomId, socket])
+  }, [localRounds, remoteRounds])
 
   function handleAdd() {
     const pageNumber = Math.ceil((localRounds.length + 2) / DEFAULT_PAGE_SIZE)
@@ -88,23 +80,37 @@ function Rounds({
       round: pageNumber,
     }
 
-    setLocalRounds(produce((rounds) => {
+    const newRounds = produce((rounds) => {
       rounds.push({ ...template, team: 'foxtrot' })
       rounds.push({ ...template, team: 'tango' })
-    }))
+    })(localRounds)
+
+    setLocalRounds(newRounds)
     setPageNumber(pageNumber)
+
+    save(newRounds)
   }
 
-  function handleChange({ currentTarget }) {
+  function handleChange(event) {
+    if (event.key !== 'Enter') {
+      return
+    }
+
+    const { currentTarget } = event
+
     const { index, key } = currentTarget.dataset
     const value = currentTarget.value
     const { round, team } = getRowFromClues(currentTarget)
 
     const rowIndex = findIndex({ round, team  })(localRounds)
 
-    setLocalRounds(produce((rounds) => {
+    const newRounds = produce((rounds) => {
       rounds[rowIndex].clues[index][key] = value
-    }))
+    })(localRounds)
+
+    setLocalRounds(newRounds)
+
+    save(newRounds)
   }
 
   function handlePageChange(pageNumber) {
@@ -115,8 +121,20 @@ function Rounds({
     const { index } = domEvent.currentTarget.dataset
     const offset = (pageNumber * DEFAULT_PAGE_SIZE) - DEFAULT_PAGE_SIZE + parseInt(index)
 
-    setLocalRounds(produce((rounds) => {
+    const newRounds = produce((rounds) => {
       rounds[offset].codemaster = key
+    })(localRounds)
+
+    setLocalRounds(newRounds)
+
+    save(newRounds)
+  }
+
+  function save(rounds) {
+    socket.connection.emit('change-rounds', JSON.stringify({
+      channel: socket.globalChannel,
+      roomId,
+      rounds,
     }))
   }
 
@@ -148,7 +166,7 @@ function Rounds({
           data-index={index}
           data-key='clue'
           defaultValue={text}
-          onBlur={handleChange}
+          onKeyPress={handleChange}
         />
       ),
     },
@@ -160,7 +178,7 @@ function Rounds({
           data-index={index}
           data-key='guess'
           defaultValue={text}
-          onBlur={handleChange}
+          onKeyPress={handleChange}
         />
       ),
       width: 75,
@@ -173,7 +191,7 @@ function Rounds({
           data-index={index}
           data-key='actual'
           defaultValue={text}
-          onBlur={handleChange}
+          onKeyPress={handleChange}
         />
       ),
       width: 75,

@@ -26,6 +26,7 @@ if (config.NODE_ENV !== 'production') {
 
 app.use(express.static(path.join(__dirname, '../build')))
 
+app.get('/api/code', controllers.generateSecretCode)
 app.post('/api/rooms', controllers.createRoom)
 app.put('/api/rooms/:roomId', controllers.joinRoom)
 

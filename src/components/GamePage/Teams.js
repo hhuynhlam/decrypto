@@ -1,6 +1,6 @@
 import React from 'react'
 import { groupBy, map, reduce, zipWith } from 'lodash/fp'
-import { Table } from 'antd'
+import { Table, Typography } from 'antd'
 
 function parseTeamClues(team) {
   const cluesByRound = map('clues')(team)
@@ -73,14 +73,14 @@ function Teams({
         dataSource={foxtrot}
         pagination={false}
         size="small"
-        title={() => "Foxtrot"}
+        title={() => <Typography.Title level={4}>Foxtrot</Typography.Title>}
       />
       <Table
         columns={cols}
         dataSource={tango}
         pagination={false}
         size="small"
-        title={() => "Tango"}
+        title={() => <Typography.Title level={4}>Tango</Typography.Title>}
       />
    </>
   )

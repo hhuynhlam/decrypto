@@ -9,7 +9,7 @@ function generateCode(code = new Set()) {
   code.add(digit)
 
   if (code.size === 3) {
-    return code
+    return Array.from(code).join('.')
   }
 
   return generateCode(code)

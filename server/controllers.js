@@ -9,6 +9,10 @@ const EXPIRE = 7200 // seconds in 1 hour
 /**
  * Express
  */
+function generateSecretCode(req, res) {
+  return res.status(200).json({ code: utils.generateCode() })
+}
+
 async function createRoom(req, res) {
   const data = {
     channel: crypto.randomBytes(16).toString('hex'),
@@ -82,23 +86,29 @@ function onStartGame(socket, io) {
     const data = JSON.parse(payload)
     const gameKey = utils.getGameKey(data.roomId)
     const { foxtrot, tango } = await utils.listTeams(null, data.roomId, io)
+    const loaded = await redis.get(gameKey)
 
-    const gameData = {
-      interceptions: {
-        foxtrot: 0,
-        tango: 0,
-      },
-      mistakes: {
-        foxtrot: 0,
-        tango: 0,
-      },
-      players: [...foxtrot, ...tango],
-      rounds: [],
-      words: {
-        foxtrot: utils.generateWords(),
-        tango: utils.generateWords(),
-      },
-    }
+    const gameData = loaded
+      ? {
+        ...JSON.parse(loaded),
+        players: [...foxtrot, ...tango],
+      }
+      : {
+        interceptions: {
+          foxtrot: 0,
+          tango: 0,
+        },
+        mistakes: {
+          foxtrot: 0,
+          tango: 0,
+        },
+        players: [...foxtrot, ...tango],
+        rounds: [],
+        words: {
+          foxtrot: utils.generateWords(),
+          tango: utils.generateWords(),
+        },
+      }
 
     await redis.set(gameKey, JSON.stringify(gameData))
     await redis.expire(gameKey, EXPIRE)
@@ -128,6 +138,7 @@ function onJoinRoom(socket, io) {
 
 module.exports = {
   createRoom,
+  generateSecretCode,
   joinRoom,
 
   onChangeRounds,
