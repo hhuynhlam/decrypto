@@ -12,8 +12,8 @@ import Teams from './Teams'
 function GamePage() {
   const socket = useContext(SocketContext)
   const params = useQueryParams()
-  const [interceptions, setInterceptions] = useState(0)
-  const [mistakes, setMistakes] = useState(0)
+  const [interceptions, setInterceptions] = useState({})
+  const [mistakes, setMistakes] = useState({})
   const [players, setPlayers] = useState([])
   const [rounds, setRounds] = useState([])
   const [words, setWords] = useState([])
@@ -23,8 +23,8 @@ function GamePage() {
     socket.connection.on('update-game', (payload) => {
       const data = JSON.parse(payload)
 
-      setInterceptions(data.interceptions[team])
-      setMistakes(data.mistakes[team])
+      setInterceptions(data.interceptions)
+      setMistakes(data.mistakes)
       setPlayers(data.players)
       setRounds(data.rounds)
       setWords(data.words[team])
@@ -49,8 +49,14 @@ function GamePage() {
           <GamePage.Meta size="small">
             <SecretCode />
             <Tokens
-              remoteInterceptions={interceptions}
-              remoteMistakes={mistakes}
+              remoteInterceptions={interceptions['foxtrot']}
+              remoteMistakes={mistakes['foxtrot']}
+              team="foxtrot"
+            />
+            <Tokens
+              remoteInterceptions={interceptions['tango']}
+              remoteMistakes={mistakes['tango']}
+              team="tango"
             />
           </GamePage.Meta >
 

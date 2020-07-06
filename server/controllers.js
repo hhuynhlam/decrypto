@@ -81,6 +81,32 @@ function onChangeTeam(socket, io) {
   }
 }
 
+function onChangeTokens(socket, io) {
+  return async (payload) => {
+    const data = JSON.parse(payload)
+
+    const gameKey = utils.getGameKey(data.roomId)
+    const gameData = JSON.parse(await redis.get(gameKey))
+
+    const newGameData = {
+      ...gameData,
+      interceptions: {
+        ...gameData.interceptions,
+        [data.team]: data.interceptions,
+      },
+      mistakes: {
+        ...gameData.mistakes,
+        [data.team]: data.mistakes,
+      },
+    }
+
+    await redis.set(gameKey, JSON.stringify(newGameData))
+    await redis.expire(gameKey, EXPIRE)
+
+    await io.in(data.channel).emit('update-game', JSON.stringify(newGameData))
+  }
+}
+
 function onStartGame(socket, io) {
   return async (payload) => {
     const data = JSON.parse(payload)
@@ -143,6 +169,7 @@ module.exports = {
 
   onChangeRounds,
   onChangeTeam,
+  onChangeTokens,
   onJoinRoom,
   onStartGame,
 }

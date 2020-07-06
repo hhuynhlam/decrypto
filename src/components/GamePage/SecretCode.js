@@ -7,12 +7,10 @@ function SecretCode() {
   const [code, setCode] = useState('None')
 
   async function handleNew() {
-    setCode('...')
-
     const response = await fetch(`${process.env.REACT_APP_PROXY}/api/code`)
     const data = await response.json()
 
-    setCode(response.code)
+    setCode(data.code)
 
     Modal.info({
       centered: true,
