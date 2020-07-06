@@ -1,13 +1,36 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { Card, Comment, Input } from 'antd'
+import cookies from 'js-cookie'
 import moment from 'moment'
 import styled from 'styled-components'
+import SocketContext from '../../contexts/SocketContext'
+import useQueryParams from '../../hooks/useQueryParams'
 
-function Chat() {
+function Chat({
+  comments = [],
+}) {
+  const socket = useContext(SocketContext)
+  const params = useQueryParams()
+  const team = params.get('team')
+  const [message, setMessage] = useState('')
+
+  function handleChange(event) {
+    setMessage(event.currentTarget.value)
+  }
+
   function handlePressEnter(event) {
     event.preventDefault()
 
-    debugger
+    const name = cookies.get('decrypto_name')
+
+    socket.connection.emit('send-team-message', JSON.stringify({
+      channel: `${socket.globalChannel}_${team}`,
+      message,
+      name,
+      time: Date.now(),
+    }))
+
+    setMessage('')
   }
 
   return (
@@ -16,47 +39,24 @@ function Chat() {
       actions={[
         <Input.TextArea
           onPressEnter={handlePressEnter}
+          onChange={handleChange}
           placeholder="send a message to the team"
           size="large"
+          value={message}
         />
       ]}
       size="small"
     >
-      <Comment
-        author="Han Solo"
-        content="I think it is 1,2,3"
-        datetime={moment().fromNow()}
-      />
-      <Comment
-        author="Han Solo"
-        content="I think it is 1,2,3"
-        datetime={moment().fromNow()}
-      />
-      <Comment
-        author="Han Solo"
-        content="I think it is 1,2,3"
-        datetime={moment().fromNow()}
-      />
-      <Comment
-        author="Han Solo"
-        content="I think it is 1,2,3"
-        datetime={moment().fromNow()}
-      />
-      <Comment
-        author="Han Solo"
-        content="I think it is 1,2,3"
-        datetime={moment().fromNow()}
-      />
-      <Comment
-        author="Han Solo"
-        content="I think it is 1,2,3"
-        datetime={moment().fromNow()}
-      />
-      <Comment
-        author="Han Solo"
-        content="I think it is 1,2,3"
-        datetime={moment().fromNow()}
-      />
+      {
+        comments.map((comment) => (
+          <Comment
+            author={comment.name}
+            content={comment.message}
+            datetime={moment(comment.time).fromNow()}
+            key={comment.time}
+          />
+        ))
+      }
     </Chat.Wrapper>
   )
 }

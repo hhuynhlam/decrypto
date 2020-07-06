@@ -18,16 +18,21 @@ function TeamsPage() {
   const [isCopiedVisible, setIsCopiedVisible] = useState(false)
 
   useEffect(() => {
-    socket.connection.on('started-game', (payload) => {
+    socket.connection.on('started-game', async (payload) => {
       const name = cookies.get('decrypto_name')
       const self = document.querySelector(`[data-name="${name}"]`)
       const team = self.dataset.team
+
+      socket.connection.emit('join-team', JSON.stringify({
+        channel: socket.globalChannel,
+        team,
+      }))
 
       history.push(`/game/${roomId}?team=${team}`)
     })
 
     return () => socket.connection.off('started-game')
-  }, [history, roomId, socket.connection])
+  }, [history, roomId, socket])
 
   useEffect(() => {
     socket.connection.on('update-teams', (payload) => {
@@ -71,6 +76,11 @@ function TeamsPage() {
       channel: socket.globalChannel,
       name,
       roomId,
+      team,
+    }))
+
+    socket.connection.emit('join-team', JSON.stringify({
+      channel: socket.globalChannel,
       team,
     }))
 

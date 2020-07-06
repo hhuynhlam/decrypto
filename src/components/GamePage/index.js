@@ -12,6 +12,7 @@ import Teams from './Teams'
 function GamePage() {
   const socket = useContext(SocketContext)
   const params = useQueryParams()
+  const [comments, setComments] = useState([])
   const [interceptions, setInterceptions] = useState({})
   const [mistakes, setMistakes] = useState({})
   const [players, setPlayers] = useState([])
@@ -32,6 +33,16 @@ function GamePage() {
 
     return () => socket.connection.off('update-game')
   }, [socket.connection, team])
+
+  useEffect(() => {
+    socket.connection.on('team-message', (payload) => {
+      const data = JSON.parse(payload)
+
+      setComments([data, ...comments])
+    })
+
+    return () => socket.connection.off('team-message')
+  }, [comments, socket.connection])
 
   return (
     <>
@@ -73,7 +84,7 @@ function GamePage() {
         </Col>
 
         <Col xs={24} md={8}>
-          <Chat />
+          <Chat comments={comments} />
         </Col>
       </GamePage.Wrapper>
     </>

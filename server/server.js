@@ -42,7 +42,9 @@ io.on('connection', (socket) => {
   socket.on('change-team', controllers.onChangeTeam(socket, io))
   socket.on('change-tokens', controllers.onChangeTokens(socket, io))
   socket.on('join-room', controllers.onJoinRoom(socket, io))
+  socket.on('join-team', controllers.onJoinTeam(socket, io))
   socket.on('start-game', controllers.onStartGame(socket, io))
+  socket.on('send-team-message', controllers.onSendTeamMessage(socket, io))
 })
 
 exports.app = app

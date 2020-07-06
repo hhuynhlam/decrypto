@@ -107,6 +107,44 @@ function onChangeTokens(socket, io) {
   }
 }
 
+function onJoinRoom(socket, io) {
+  return async (payload) => {
+    const data = JSON.parse(payload)
+
+    const tangoKey = utils.getTeamKey(data.roomId, 'tango')
+
+    await socket.join(data.channel)
+
+    await redis.lrem(tangoKey, 0, data.name)
+    await redis.rpush(tangoKey, data.name)
+    await redis.expire(tangoKey, EXPIRE)
+
+    await utils.listTeams(data.channel, data.roomId, io)
+  }
+}
+
+function onJoinTeam(socket, io) {
+  return async (payload) => {
+    const data = JSON.parse(payload)
+
+    await socket.join(`${data.channel}_${data.team}`)
+  }
+}
+
+function onSendTeamMessage(socket, io) {
+  return async (payload) => {
+    const data = JSON.parse(payload)
+
+    const message = {
+      message: data.message,
+      name: data.name,
+      timestamp: data.time,
+    }
+
+    await io.in(data.channel).emit('team-message', JSON.stringify(message))
+  }
+}
+
 function onStartGame(socket, io) {
   return async (payload) => {
     const data = JSON.parse(payload)
@@ -141,24 +179,6 @@ function onStartGame(socket, io) {
 
     await io.in(data.channel).emit('started-game', `started by: ${data.name}`)
     await io.in(data.channel).emit('update-game', JSON.stringify(gameData))
-
-    await socket.join(`${data.channel}_${data.team}`)
-  }
-}
-
-function onJoinRoom(socket, io) {
-  return async (payload) => {
-    const data = JSON.parse(payload)
-
-    const tangoKey = utils.getTeamKey(data.roomId, 'tango')
-
-    await socket.join(data.channel)
-
-    await redis.lrem(tangoKey, 0, data.name)
-    await redis.rpush(tangoKey, data.name)
-    await redis.expire(tangoKey, EXPIRE)
-
-    await utils.listTeams(data.channel, data.roomId, io)
   }
 }
 
@@ -171,5 +191,7 @@ module.exports = {
   onChangeTeam,
   onChangeTokens,
   onJoinRoom,
+  onJoinTeam,
   onStartGame,
+  onSendTeamMessage,
 }
