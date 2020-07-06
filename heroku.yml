@@ -9,5 +9,5 @@ run:
   web:
     image: web
     command:
-      - npm run serve
+      - npm run server
 
