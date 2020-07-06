@@ -50,7 +50,11 @@ async function listTeams(channel, roomId, io) {
   const foxtrot = await redis.lrange(foxtrotKey, 0, -1)
   const tango = await redis.lrange(tangoKey, 0, -1)
 
-  await io.in(channel).emit('update-teams', JSON.stringify({ foxtrot, tango }))
+  const teams = { foxtrot, tango }
+
+  await io.in(channel).emit('update-teams', JSON.stringify(teams))
+
+  return teams
 }
 
 module.exports = {

@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { findIndex, isEqual } from 'lodash/fp'
 import { Button, Dropdown, Input, Menu, Table } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import produce from 'immer'
+import { useParams } from 'react-router-dom'
 import { v1 as uuidv1 } from 'uuid'
+import SocketContext from '../../contexts/SocketContext'
 
 const DEFAULT_PAGE_SIZE = 2
 
@@ -58,6 +60,8 @@ function Rounds({
   players = [],
   remoteRounds = [],
 }) {
+  const socket = useContext(SocketContext)
+  const { roomId } = useParams()
   const [pageNumber, setPageNumber] = useState(1)
   const [localRounds, setLocalRounds] = useState(remoteRounds)
 
@@ -68,8 +72,12 @@ function Rounds({
   }, [remoteRounds])
 
   useEffect(() => {
-    console.log('save', localRounds)
-  }, [localRounds])
+    socket.connection.emit('change-rounds', JSON.stringify({
+      channel: socket.globalChannel,
+      roomId,
+      rounds: localRounds,
+    }))
+  }, [localRounds, roomId, socket])
 
   function handleAdd() {
     const pageNumber = Math.ceil((localRounds.length + 2) / DEFAULT_PAGE_SIZE)

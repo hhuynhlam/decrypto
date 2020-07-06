@@ -9,61 +9,11 @@ import Rounds from './Rounds'
 import Tokens from './Tokens'
 import Teams from './Teams'
 
-const rounds = [
-  {
-    round: 1,
-    team: 'tango',
-    codemaster: 'hai',
-    clues: [
-      {
-        clue: "down",
-        guess: 1,
-        actual: 1,
-      },
-      {
-        clue: "to",
-        guess: 1,
-        actual: 1,
-      },
-      {
-        clue: "ride",
-        guess: 1,
-        actual: 1,
-      },
-    ],
-  },
-  {
-    round: 1,
-    team: 'foxtrot',
-    codemaster: 'judy',
-    clues: [
-      {
-        clue: "big",
-        guess: 1,
-        actual: 1,
-      },
-      {
-        clue: "black",
-        guess: 1,
-        actual: 1,
-      },
-      {
-        clue: "bear",
-        guess: 1,
-        actual: 1,
-      },
-    ],
-  },
-]
-
-const players = [
-  'hai',
-  'judy',
-]
-
 function GamePage() {
   const socket = useContext(SocketContext)
   const params = useQueryParams()
+  const [players, setPlayers] = useState([])
+  const [rounds, setRounds] = useState([])
   const [words, setWords] = useState([])
   const team = params.get('team')
 
@@ -71,6 +21,8 @@ function GamePage() {
     socket.connection.on('update-game', (payload) => {
       const data = JSON.parse(payload)
 
+      setPlayers(data.players)
+      setRounds(data.rounds)
       setWords(data.words[team])
     })
 
@@ -101,7 +53,7 @@ function GamePage() {
                 <Rounds remoteRounds={rounds} players={players} />
               </Tabs.TabPane>
               <Tabs.TabPane tab="Teams" key="teams">
-                <Teams />
+                <Teams rounds={rounds} />
               </Tabs.TabPane>
             </Tabs>
           </Card>
