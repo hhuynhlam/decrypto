@@ -11,4 +11,6 @@ COPY ./public ./public
 COPY ./server ./server
 COPY ./src ./src
 
-CMD npm run serve
+RUN npm run build
+
+CMD npm run server
